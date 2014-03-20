@@ -2,9 +2,7 @@ package com.rhjensen.sample.utilities.getopts;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by Richard on 3/20/2014.
@@ -59,4 +57,20 @@ public class ArgsTest {
         Args args = new Args("x", new String[0]);
         assertFalse(args.getBoolean('x'));
     }
+
+    @Test
+    public void testSimpleStringPresent() throws Exception {
+        Args args = new Args("x*", new String[]{"-x", "param"});
+        assertEquals(1, args.cardinality());
+        assertTrue(args.has('x'));
+        assertEquals("param", args.getString('x'));
+    }
+
+    @Test
+    public void testErrorMessageWhenStringParameterIsMissing() throws Exception {
+        Args args = new Args("x*", new String[]{"-x"});
+        assertEquals("Could not find string parameter for -x.", args.errorMessage());
+        assertEquals("", args.getString('x'));
+    }
+
 }
