@@ -73,4 +73,23 @@ public class ArgsTest {
         assertEquals("", args.getString('x'));
     }
 
+    @Test
+    public void testSimpleIntPresent() throws Exception {
+        Args args = new Args("x#", new String[]{"-x", "42"});
+        assertEquals(1, args.cardinality());
+        assertTrue(args.has('x'));
+        assertEquals(42, args.getInt('x'));
+    }
+    @Test
+    public void testErrorMessageForInvalidIntegerParameter() throws Exception {
+        Args args = new Args("x#", new String[]{"-x", "Forty two"});
+        assertEquals("Argument -x expects an integer but was 'Forty two'.", args.errorMessage());
+    }
+    @Test
+    public void testMissingInteger() throws Exception {
+        Args args = new Args("x#", new String[]{"-x"});
+        assertEquals("Could not find integer parameter for -x.", args.errorMessage());
+        assertEquals(0, args.getInt('x'));
+    }
+
 }
